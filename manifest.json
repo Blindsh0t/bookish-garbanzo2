@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Save Tabs to Folder",
+    "version": "1.0",
+    "description": "Saves all currently open tabs into a folder named with today's date.",
+    "permissions": [
+        "tabs",
+        "bookmarks"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icon16.png",
+            "48": "icon48.png",
+            "128": "icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+    }
+}
