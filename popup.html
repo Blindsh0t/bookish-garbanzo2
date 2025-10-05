@@ -5,23 +5,162 @@
     <title>Save Tabs</title>
     <style>
         body {
-            width: 400px;
-            font-family: sans-serif;
+            width: 450px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 16px;
+            margin: 0;
         }
 
-        #checklist {
-            max-height: 300px;
-            overflow-y: scroll;
+        h1 {
+            font-size: 20px;
+            margin: 0 0 16px 0;
+            color: #202124;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: 1px solid #dadce0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #f8f9fa;
+        }
+
+        button:active {
+            background: #e8eaed;
+        }
+
+        #saveTabsBtn {
+            background: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+            display: none;
+        }
+
+        #saveTabsBtn:hover {
+            background: #1765cc;
+        }
+
+        #saveTabsBtn.show {
+            display: inline-block;
+        }
+
+        .window-section {
+            margin-bottom: 20px;
+        }
+
+        .window-header {
+            font-weight: 600;
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        #tabsList {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        .tab-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 8px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .tab-item:hover {
+            background: #f8f9fa;
+        }
+
+        .tab-item input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .tab-item label {
+            cursor: pointer;
+            font-size: 13px;
+            color: #202124;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab-item label:hover {
+            color: #1a73e8;
+        }
+
+        .status-message {
+            padding: 12px;
+            margin-top: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status-message.success {
+            background: #e6f4ea;
+            color: #137333;
+            display: block;
+        }
+
+        .status-message.error {
+            background: #fce8e6;
+            color: #c5221f;
+            display: block;
+        }
+
+        .permission-notice {
+            padding: 12px;
+            background: #fff4e5;
+            border: 1px solid #ffd666;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            color: #614700;
         }
     </style>
 </head>
 
 <body>
-    <h1>Save Tabs</h1>
-    <button id="saveTabs">Prepare Tabs to Save</button>
-    <div id="checklist">
-        <!-- Checklist items will be added here by popup.js -->
+    <h1>Save Tabs to Bookmarks</h1>
+
+    <div id="permissionNotice" class="permission-notice" style="display: none;">
+        Please enable "Allow in Incognito" in extension settings to save incognito tabs.
     </div>
+
+    <div class="button-group">
+        <button id="quickSaveBtn">Quick Save</button>
+        <button id="saveExceptIncognitoBtn" style="display: none;">Save Except Incognito</button>
+        <button id="selectAllBtn">Select All</button>
+        <button id="clearAllBtn">Clear All</button>
+    </div>
+
+    <div id="tabsList">
+        <!-- Tab list will be populated here -->
+    </div>
+
+    <button id="saveTabsBtn">Save Tabs</button>
+
+    <div id="statusMessage" class="status-message"></div>
 
     <script src="popup.js"></script>
 </body>
