@@ -1,9 +1,9 @@
 # Save Tabs to Folder
 
-Save Tabs to Folder is a Chrome extension that saves all open tabs in your browser into a bookmark folder named with the current date. It helps you quickly organize and archive your browsing sessions.
+Bookish-garbanzo is a Chromium extension that saves tabs into folder. It helps you quickly organize and archive your browsing sessions.
 
 ## Features
-- Saves all open tabs into a dated folder.
+- Saves open tabs into folder.
 - Excludes generic tabs like Chrome settings and extensions.
 - Interactive checklist to select/deselect tabs before saving.
 - Supports both normal and incognito tabs.
@@ -16,12 +16,7 @@ Save Tabs to Folder is a Chrome extension that saves all open tabs in your brows
 
 ## Usage
 1. Click the extension icon to open the popup.
-2. Click the "Prepare Tabs to Save" button.
-3. Review the tab checklist and uncheck any tabs you don’t want to save.
-4. Click "Save Checked Tabs" to create a bookmark folder.
-
-## Contributing
-Feel free to submit issues or feature requests. Pull requests are welcome! For major changes, please open an issue first to discuss your ideas.
-
-## License
-This project is licensed under the MIT License.
+2. Review the tab checklist and uncheck any tabs you don’t want to save.
+3. Quick save to save all opened tabs from current window.
+4. Save except Incognito selects all tabs accross all window except incognito tabs.
+5. Click "Save Tabs" to create a bookmark folder.
