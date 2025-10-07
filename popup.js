@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 function setupEventListeners() {
     document.getElementById('quickSaveBtn').addEventListener('click', handleQuickSave);
     document.getElementById('saveExceptIncognitoBtn').addEventListener('click', handleSaveExceptIncognito);
+    document.getElementById('saveIncognitoBtn').addEventListener('click', handleSaveIncognito);
     document.getElementById('selectAllBtn').addEventListener('click', handleSelectAll);
     document.getElementById('clearAllBtn').addEventListener('click', handleClearAll);
     document.getElementById('saveTabsBtn').addEventListener('click', handleSaveTabs);
@@ -73,6 +74,11 @@ async function loadTabs() {
         // Show/hide "Save Except Incognito" button
         if (hasMultipleWindows) {
             document.getElementById('saveExceptIncognitoBtn').style.display = 'inline-block';
+        }
+
+        // Show/hide "Save Incognito" button
+        if (hasIncognito) {
+            document.getElementById('saveIncognitoBtn').style.display = 'inline-block';
         }
 
         displayTabs(tabsByWindow);
@@ -138,6 +144,8 @@ function createTabItem(tab, windowId) {
 
 // Quick Save: Only current window, exclude incognito
 async function handleQuickSave() {
+    showStatus("Processing...", 'processing');
+
     const checkboxes = document.querySelectorAll('#tabsList input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         const windowId = parseInt(checkbox.dataset.windowId);
@@ -149,11 +157,17 @@ async function handleQuickSave() {
     });
 
     updateSaveButtonVisibility();
-    await handleSaveTabs();
+
+    // Small delay for visual feedback
+    setTimeout(async () => {
+        await performSave();
+    }, 300);
 }
 
 // Save Except Incognito: All windows except incognito
-function handleSaveExceptIncognito() {
+async function handleSaveExceptIncognito() {
+    showStatus("Processing...", 'processing');
+
     const checkboxes = document.querySelectorAll('#tabsList input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
         const windowId = parseInt(checkbox.dataset.windowId);
@@ -164,6 +178,32 @@ function handleSaveExceptIncognito() {
     });
 
     updateSaveButtonVisibility();
+
+    // Small delay for visual feedback
+    setTimeout(async () => {
+        await performSave();
+    }, 300);
+}
+
+// Save Incognito: Only incognito tabs
+async function handleSaveIncognito() {
+    showStatus("Processing...", 'processing');
+
+    const checkboxes = document.querySelectorAll('#tabsList input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+        const windowId = parseInt(checkbox.dataset.windowId);
+        const windowData = allTabs.find(w => w.windowId === windowId);
+        const isIncognito = windowData ? windowData.isIncognito : false;
+
+        checkbox.checked = isIncognito;
+    });
+
+    updateSaveButtonVisibility();
+
+    // Small delay for visual feedback
+    setTimeout(async () => {
+        await performSave();
+    }, 300);
 }
 
 // Select All
@@ -199,8 +239,17 @@ function updateSaveButtonVisibility() {
     }
 }
 
-// Save selected tabs
+// Save selected tabs (called from Save button)
 async function handleSaveTabs() {
+    showStatus("Processing...", 'processing');
+
+    setTimeout(async () => {
+        await performSave();
+    }, 300);
+}
+
+// Perform the actual save operation
+async function performSave() {
     const checkboxes = document.querySelectorAll('#tabsList input[type="checkbox"]:checked');
 
     if (checkboxes.length === 0) {
@@ -325,16 +374,30 @@ async function handleSaveTabs() {
             }
         }
 
-        showStatus(`Successfully saved ${savedCount} tab(s) to "${folderName}"`, 'success');
+        // Add animation to the save button
+        const saveBtn = document.getElementById('saveTabsBtn');
+        if (saveBtn.classList.contains('show')) {
+            saveBtn.classList.add('save-animation');
+            setTimeout(() => {
+                saveBtn.classList.remove('save-animation');
+            }, 500);
+        }
+
+        showStatus(`Saved ${savedCount} tab(s) → ${folderName}`, 'success');
 
         // Clear selections after successful save
         setTimeout(() => {
             handleClearAll();
+            // Hide status after a bit longer
+            setTimeout(() => {
+                const statusEl = document.getElementById('statusMessage');
+                statusEl.style.display = 'none';
+            }, 2000);
         }, 1500);
 
     } catch (error) {
         console.error("Error saving tabs:", error);
-        showStatus("Error saving tabs. Please try again.", 'error');
+        showStatus("Error: Failed to save tabs", 'error');
     }
 }
 
@@ -343,10 +406,5 @@ function showStatus(message, type) {
     const statusEl = document.getElementById('statusMessage');
     statusEl.textContent = message;
     statusEl.className = `status-message ${type}`;
-
-    if (type === 'success') {
-        setTimeout(() => {
-            statusEl.className = 'status-message';
-        }, 3000);
-    }
+    statusEl.style.display = 'block';
 }
